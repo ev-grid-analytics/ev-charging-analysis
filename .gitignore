@@ -1,0 +1,25 @@
+# Virtual environments
+ev_env/
+.venv/
+venv/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# Parquet CRC checksum files (Spark internal metadata)
+**/.*.crc
+**/_temporary/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Spark logs
+derby.log
+metastore_db/
+spark-warehouse/
