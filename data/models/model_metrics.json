@@ -1,0 +1,34 @@
+{
+  "model_family": "XGBoost",
+  "evaluation_scope": "continental_us_only",
+  "classification": {
+    "validation_pr_auc": 0.439715424324205,
+    "validation_roc_auc": 0.9778935682566967,
+    "validation_precision_at_recall_0_8": 0.34532374100719426,
+    "spatial_test_pr_auc": 0.42816226177953837,
+    "spatial_test_pr_auc_mean": 0.2865196785633202,
+    "spatial_test_pr_auc_std": 0.08025087217233205,
+    "spatial_test_pr_auc_seeds": [
+      1,
+      6,
+      7,
+      8,
+      9
+    ],
+    "precision_at_p50_mean": 0.34929548213969674,
+    "precision_at_p50_std": 0.06300301773737281,
+    "recall_at_p50_mean": 0.3072733930936845,
+    "recall_at_p50_std": 0.11735661555828189,
+    "holdout_per_region_primary": 3
+  },
+  "regression": {
+    "validation_mae": 4.15068516597365,
+    "validation_rmse": 6.5630017106469065,
+    "spatial_test_mae": 4.193230063826601
+  },
+  "agreement_both_flag": 0.005345666406390774,
+  "agreement_regressor_conditioned_on_classifier": 0.21575757575757576,
+  "agreement_classifier_conditioned_on_regressor": 0.9081632653061225,
+  "agreement_rate": 0.005345666406390774,
+  "rows_modeled": 33298
+}

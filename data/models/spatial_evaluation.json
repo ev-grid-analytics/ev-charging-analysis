@@ -1,0 +1,242 @@
+{
+  "primary": {
+    "config": "holdout_per_region=3, n_seeds=5, min_test_deserts=100",
+    "pr_auc_mean": 0.2865196785633202,
+    "pr_auc_std": 0.08025087217233205,
+    "precision_at_p50_mean": 0.34929548213969674,
+    "precision_at_p50_std": 0.06300301773737281,
+    "recall_at_p50_mean": 0.3072733930936845,
+    "recall_at_p50_std": 0.11735661555828189
+  },
+  "configurations": [
+    {
+      "holdout_per_region": 2,
+      "n_seeds": 5,
+      "min_test_deserts": 100,
+      "attempts_used": 5,
+      "seeds": [
+        {
+          "seed": 0,
+          "test_states": [
+            "AL",
+            "AR",
+            "IN",
+            "KS",
+            "NY",
+            "OR",
+            "PA",
+            "UT"
+          ],
+          "test_deserts": 61,
+          "test_rows": 7158,
+          "pr_auc": 0.2163146931022667,
+          "precision_at_p50": 0.19736842105263158,
+          "recall_at_p50": 0.2459016393442623
+        },
+        {
+          "seed": 1,
+          "test_states": [
+            "IA",
+            "ME",
+            "MT",
+            "NM",
+            "RI",
+            "SD",
+            "TN",
+            "WV"
+          ],
+          "test_deserts": 146,
+          "test_rows": 3965,
+          "pr_auc": 0.2948078874161323,
+          "precision_at_p50": 0.3090128755364807,
+          "recall_at_p50": 0.4931506849315068
+        },
+        {
+          "seed": 2,
+          "test_states": [
+            "AR",
+            "CO",
+            "KS",
+            "LA",
+            "MI",
+            "NJ",
+            "RI",
+            "UT"
+          ],
+          "test_deserts": 66,
+          "test_rows": 4353,
+          "pr_auc": 0.1491794131370358,
+          "precision_at_p50": 0.1926605504587156,
+          "recall_at_p50": 0.3181818181818182
+        },
+        {
+          "seed": 3,
+          "test_states": [
+            "AZ",
+            "CT",
+            "IN",
+            "ME",
+            "MS",
+            "TN",
+            "UT",
+            "WI"
+          ],
+          "test_deserts": 28,
+          "test_rows": 4107,
+          "pr_auc": 0.31136748792284175,
+          "precision_at_p50": 0.2830188679245283,
+          "recall_at_p50": 0.5357142857142857
+        },
+        {
+          "seed": 4,
+          "test_states": [
+            "AR",
+            "ME",
+            "MN",
+            "NJ",
+            "OR",
+            "VA",
+            "WI",
+            "WY"
+          ],
+          "test_deserts": 46,
+          "test_rows": 4798,
+          "pr_auc": 0.13522844595544564,
+          "precision_at_p50": 0.14545454545454545,
+          "recall_at_p50": 0.34782608695652173
+        }
+      ],
+      "pr_auc_mean": 0.22137958550674447,
+      "pr_auc_std": 0.07231884259833975,
+      "precision_at_p50_mean": 0.22550305208538032,
+      "precision_at_p50_std": 0.060926037906218616,
+      "recall_at_p50_mean": 0.3881549030256789,
+      "recall_at_p50_std": 0.10913892309673902,
+      "warning": "Some seeds have <100 test deserts; metrics are noisy for single-seed interpretation."
+    },
+    {
+      "holdout_per_region": 3,
+      "n_seeds": 5,
+      "min_test_deserts": 100,
+      "attempts_used": 10,
+      "seeds": [
+        {
+          "seed": 1,
+          "test_states": [
+            "FL",
+            "IL",
+            "KY",
+            "ME",
+            "MT",
+            "NJ",
+            "NM",
+            "NY",
+            "OH",
+            "TN",
+            "UT",
+            "WI"
+          ],
+          "test_deserts": 126,
+          "test_rows": 9728,
+          "pr_auc": 0.42816226177953837,
+          "precision_at_p50": 0.4342105263157895,
+          "recall_at_p50": 0.5238095238095238
+        },
+        {
+          "seed": 6,
+          "test_states": [
+            "DC",
+            "KS",
+            "LA",
+            "ME",
+            "MI",
+            "MT",
+            "NC",
+            "ND",
+            "NM",
+            "NY",
+            "PA",
+            "WY"
+          ],
+          "test_deserts": 264,
+          "test_rows": 8543,
+          "pr_auc": 0.2550987830737364,
+          "precision_at_p50": 0.3602150537634409,
+          "recall_at_p50": 0.2537878787878788
+        },
+        {
+          "seed": 7,
+          "test_states": [
+            "FL",
+            "IN",
+            "MA",
+            "ND",
+            "NV",
+            "NY",
+            "OH",
+            "OR",
+            "RI",
+            "TN",
+            "UT",
+            "VA"
+          ],
+          "test_deserts": 109,
+          "test_rows": 8320,
+          "pr_auc": 0.3028798099354372,
+          "precision_at_p50": 0.390625,
+          "recall_at_p50": 0.22935779816513763
+        },
+        {
+          "seed": 8,
+          "test_states": [
+            "AL",
+            "CO",
+            "CT",
+            "ID",
+            "KS",
+            "KY",
+            "ME",
+            "MS",
+            "ND",
+            "NV",
+            "OH",
+            "VT"
+          ],
+          "test_deserts": 153,
+          "test_rows": 6182,
+          "pr_auc": 0.18533427068713054,
+          "precision_at_p50": 0.2542372881355932,
+          "recall_at_p50": 0.19607843137254902
+        },
+        {
+          "seed": 9,
+          "test_states": [
+            "CT",
+            "ID",
+            "MO",
+            "ND",
+            "OH",
+            "PA",
+            "TN",
+            "TX",
+            "UT",
+            "VA",
+            "VT",
+            "WY"
+          ],
+          "test_deserts": 141,
+          "test_rows": 9311,
+          "pr_auc": 0.2611232673407584,
+          "precision_at_p50": 0.30718954248366015,
+          "recall_at_p50": 0.3333333333333333
+        }
+      ],
+      "pr_auc_mean": 0.2865196785633202,
+      "pr_auc_std": 0.08025087217233205,
+      "precision_at_p50_mean": 0.34929548213969674,
+      "precision_at_p50_std": 0.06300301773737281,
+      "recall_at_p50_mean": 0.3072733930936845,
+      "recall_at_p50_std": 0.11735661555828189
+    }
+  ]
+}

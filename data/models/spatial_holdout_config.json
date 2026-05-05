@@ -1,0 +1,33 @@
+{
+  "strategy": "stratified_per_region",
+  "holdout_per_region": 3,
+  "primary_seed": 1,
+  "test_states": [
+    "FL",
+    "IL",
+    "KY",
+    "ME",
+    "MT",
+    "NJ",
+    "NM",
+    "NY",
+    "OH",
+    "TN",
+    "UT",
+    "WI"
+  ],
+  "metric_seeds": [
+    1,
+    6,
+    7,
+    8,
+    9
+  ],
+  "spatial_test_pr_auc_per_seed": {
+    "1": 0.42816226177953837,
+    "6": 0.2550987830737364,
+    "7": 0.3028798099354372,
+    "8": 0.18533427068713054,
+    "9": 0.2611232673407584
+  }
+}

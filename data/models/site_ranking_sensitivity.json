@@ -1,0 +1,32 @@
+{
+  "weights": {
+    "W_GAP": 0.28,
+    "W_NEED": 0.33,
+    "W_POP": 0.12,
+    "W_EQUITY": 0.15,
+    "W_MARKET_GAP": 0.12
+  },
+  "top100_region_current": {
+    "Midwest": 3,
+    "South": 43,
+    "West": 54
+  },
+  "aggregate_gap_top100_region": {
+    "Midwest": 3,
+    "South": 43,
+    "West": 54
+  },
+  "per_zcta_gap_top100_region": {
+    "Midwest": 9,
+    "Northeast": 1,
+    "South": 21,
+    "West": 69
+  },
+  "top100_region_gap_heavy": {
+    "South": 98,
+    "West": 2
+  },
+  "top100_region_population_heavy": {
+    "South": 100
+  }
+}

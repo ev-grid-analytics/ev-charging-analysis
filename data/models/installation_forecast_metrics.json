@@ -1,0 +1,49 @@
+{
+  "target": "new_dcfc_ports_next_12m",
+  "model_family": {
+    "poisson": "PoissonRegressor",
+    "boosted": "XGBRegressor"
+  },
+  "time_split": {
+    "cutoff": "2025-02-01",
+    "train_rows": 11454512,
+    "test_rows": 399576
+  },
+  "baselines": {
+    "constant_zero": {
+      "mae": 0.4587387630888742,
+      "rmse": 2.494703280377158
+    },
+    "constant_mean": {
+      "mae": 0.8536543603278557,
+      "rmse": 2.452162964479368
+    },
+    "persistence_last12m": {
+      "mae": 0.14097943820449677,
+      "rmse": 1.2576850472112076
+    },
+    "target_distribution": {
+      "prevalence_ge_1": 0.06956373756181553,
+      "mean": 0.4587387630888742,
+      "median": 0.0,
+      "p95": 2.0
+    }
+  },
+  "poisson": {
+    "mae": 0.5009342115171084,
+    "rmse": 2.4861570695099426,
+    "precision_at_threshold": 0.0,
+    "recall_at_threshold": 0.0,
+    "threshold": 0.5,
+    "spearman_rho": NaN
+  },
+  "boosted": {
+    "mae": 0.21522473352541735,
+    "rmse": 1.2079214873063684,
+    "precision_at_threshold": 0.8255067913453007,
+    "recall_at_threshold": 0.870233127068643,
+    "threshold": 0.5,
+    "spearman_rho": 0.42143964145630675
+  },
+  "selected_model": "boosted"
+}
