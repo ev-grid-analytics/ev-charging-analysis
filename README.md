@@ -56,18 +56,17 @@ flowchart TB
   ACS --> F04B
   GEO --> F04B
   EXT --> F04B
-  F04B --> EDA
+
   F04B --> M06
-  F04B --> M10
-  M06 --> C07 --> R08
+  F04B --> C07
+  C07 --> R08
   M10 --> R08
   R08 --> APP
-  M06 --> APP
-  M10 --> APP
-  F04B --> COLAB
-  M06 --> COLAB
-  M10 --> COLAB
-  R08 --> COLAB
+
+  F04B -. EDA path .-> EDA
+  F04B -. Interactive .-> COLAB
+  M06 -. Metrics .-> APP
+  M10 -. Forecast .-> APP
 
   class AFDC,ACS,GEO,EXT,F04B,M06,M10,C07,APP node
   class EDA,COLAB notebook
@@ -93,6 +92,9 @@ flowchart TD
   class A,B,C,D,E,F,G node
   class H notebook
 ```
+
+> `01_data_loading_and_profiling.ipynb`, `02_data_cleaning.ipynb`, `03_census_join.ipynb`, and
+> `04_county_aggregation.ipynb` are preserved as foundational preprocessing notebooks and documentation of the early data pipeline.
 
 ### 3) ER / Data Schema Diagram
 
@@ -290,7 +292,14 @@ ev-charging-analysis/
 │   └── models/                  # Trained models + metrics/evaluation JSON
 ├── notebooks/
 │   ├── 00_colab_interactive_workflow.ipynb
+│   ├── 01_data_loading_and_profiling.ipynb
+│   ├── 02_data_cleaning.ipynb
+│   ├── 03_census_join.ipynb
+│   ├── 04_county_aggregation.ipynb
 │   ├── 04b_modeling_features.py
+│   ├── 04c_fetch_external_context.py
+│   ├── 04d_geospatial_enrichment.py
+│   ├── 04e_zcta_terrain_enrichment.py
 │   ├── 05_visual_eda_dashboard.ipynb.ipynb
 │   ├── 06_xgboost_classifier.py
 │   ├── 07_candidate_site_generation.py
@@ -328,6 +337,13 @@ python3 run_pipeline.py
 Default script stages run in order:
 
 - `04b -> 06 -> 07 -> 08 -> 10`
+
+Foundational data notebooks (run manually when needed):
+
+- `01_data_loading_and_profiling.ipynb`
+- `02_data_cleaning.ipynb`
+- `03_census_join.ipynb`
+- `04_county_aggregation.ipynb`
 
 EDA/dashboard notebook is run separately:
 
