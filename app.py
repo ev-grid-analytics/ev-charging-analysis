@@ -557,6 +557,17 @@ def main():
         "Accuracy is shown for completeness but is often **misleading** when deserts are rare (~2% prevalence); "
         "prioritize precision, recall, F1, and PR-AUC."
     )
+    st.markdown(
+        """
+**Why these numbers can look low**
+
+Charging deserts are rare, and this panel defaults to a geographically held-out spatial test (the hardest evaluation regime).
+Precision/recall/F1 at threshold 0.50 reflect that difficulty. The headline metric is PR-AUC, which remains far above
+the random baseline for rare-event classification. Thresholds are policy-tunable:
+- lower threshold -> higher recall (catch more deserts) with more false positives
+- higher threshold -> higher precision (fewer false alarms) with more misses
+"""
+    )
 
     cm_df = pd.DataFrame(
         {

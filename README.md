@@ -20,61 +20,67 @@ This project provides a complete reproducible flow:
 ### 1) Executive System Diagram
 
 ```mermaid
-flowchart LR
-  subgraph S1["Data Sources"]
-    AFDC["AFDC EV Stations (raw)"]
-    ACS["ACS ZCTA Demographics (raw)"]
-    GAZ["Census Gazetteer / Geospatial Context"]
-    WX["Weather / Terrain / Interstate Context"]
+flowchart TB
+  classDef node fill:#1f2937,stroke:#93c5fd,color:#f9fafb,stroke-width:1.5px,rx:8,ry:8,font-size:12px;
+  classDef notebook fill:#111827,stroke:#60a5fa,color:#e5e7eb,stroke-width:1.5px,stroke-dasharray: 4 3,rx:8,ry:8,font-size:12px;
+  classDef artifact fill:#0b1220,stroke:#34d399,color:#e5e7eb,stroke-width:1.5px,rx:8,ry:8,font-size:12px;
+
+  subgraph SRC["Data Sources"]
+    AFDC["AFDC stations"]
+    ACS["ACS demographics"]
+    GEO["Gazetteer + geospatial context"]
+    EXT["Weather / terrain / roads"]
   end
 
-  subgraph S2["Processing Layer"]
-    F04B["04b_modeling_features.py\nBuild zcta_modeling_features.parquet"]
-    EDA["05_visual_eda_dashboard.ipynb.ipynb\nEDA tables + figures"]
+  subgraph PROC["Processing"]
+    F04B["04b_modeling_features.py\nzcta_modeling_features.parquet"]
+    EDA["05_visual_eda_dashboard.ipynb.ipynb"]
   end
 
-  subgraph S3["Modeling Layer"]
-    M06["06_xgboost_classifier.py\nClassifier + Regressor\nSpatial Evaluation"]
-    M10["10_installation_forecasting.py\nForecast future DCFC additions"]
+  subgraph MODEL["Modeling"]
+    M06["06_xgboost_classifier.py\nclassifier + regressor + spatial eval"]
+    M10["10_installation_forecasting.py\n12-month install forecast"]
   end
 
-  subgraph S4["Recommendation Layer"]
-    C07["07_candidate_site_generation.py\ncandidate_sites.parquet"]
-    R08["08_site_ranking_topN.py\nrecommended_sites_topN.parquet\ncandidate_sites_scored.parquet"]
+  subgraph REC["Recommendation"]
+    C07["07_candidate_site_generation.py"]
+    R08["08_site_ranking_topN.py\nrecommended_sites_topN.parquet"]
   end
 
-  subgraph S5["Serving / UX"]
-    APP["app.py (Streamlit)\nPolicy + diagnostics dashboard"]
-    COLAB["00_colab_interactive_workflow.ipynb\nInteractive experimentation"]
+  subgraph UX["Serving & Analysis"]
+    APP["app.py (Streamlit dashboard)"]
+    COLAB["00_colab_interactive_workflow.ipynb"]
   end
 
   AFDC --> F04B
   ACS --> F04B
-  GAZ --> F04B
-  WX --> F04B
-
+  GEO --> F04B
+  EXT --> F04B
   F04B --> EDA
   F04B --> M06
   F04B --> M10
-
-  M06 --> C07
-  C07 --> R08
+  M06 --> C07 --> R08
   M10 --> R08
-
+  R08 --> APP
   M06 --> APP
   M10 --> APP
-  R08 --> APP
-
   F04B --> COLAB
   M06 --> COLAB
   M10 --> COLAB
   R08 --> COLAB
+
+  class AFDC,ACS,GEO,EXT,F04B,M06,M10,C07,APP node
+  class EDA,COLAB notebook
+  class R08 artifact
 ```
 
 ### 2) Detailed Pipeline Flow
 
 ```mermaid
 flowchart TD
+  classDef node fill:#1f2937,stroke:#93c5fd,color:#f9fafb,stroke-width:1.5px,rx:8,ry:8,font-size:12px;
+  classDef notebook fill:#111827,stroke:#60a5fa,color:#e5e7eb,stroke-width:1.5px,stroke-dasharray: 4 3,rx:8,ry:8,font-size:12px;
+
   A["run_pipeline.py"] --> B["04b_modeling_features.py"]
   B --> C["06_xgboost_classifier.py"]
   C --> D["07_candidate_site_generation.py"]
@@ -82,7 +88,10 @@ flowchart TD
   E --> F["10_installation_forecasting.py"]
   F --> G["app.py (streamlit run)"]
 
-  B -. optional separate EDA .-> H["05_visual_eda_dashboard.ipynb.ipynb"]
+  B -.-> H["05_visual_eda_dashboard.ipynb.ipynb"]
+
+  class A,B,C,D,E,F,G node
+  class H notebook
 ```
 
 ### 3) ER / Data Schema Diagram
