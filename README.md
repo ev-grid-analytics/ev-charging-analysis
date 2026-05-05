@@ -15,6 +15,259 @@ This project provides a complete reproducible flow:
 
 ---
 
+## Architecture & Data Model
+
+### 1) Executive System Diagram
+
+```mermaid
+flowchart LR
+  subgraph S1["Data Sources"]
+    AFDC["AFDC EV Stations (raw)"]
+    ACS["ACS ZCTA Demographics (raw)"]
+    GAZ["Census Gazetteer / Geospatial Context"]
+    WX["Weather / Terrain / Interstate Context"]
+  end
+
+  subgraph S2["Processing Layer"]
+    F04B["04b_modeling_features.py\nBuild zcta_modeling_features.parquet"]
+    EDA["05_visual_eda_dashboard.ipynb.ipynb\nEDA tables + figures"]
+  end
+
+  subgraph S3["Modeling Layer"]
+    M06["06_xgboost_classifier.py\nClassifier + Regressor\nSpatial Evaluation"]
+    M10["10_installation_forecasting.py\nForecast future DCFC additions"]
+  end
+
+  subgraph S4["Recommendation Layer"]
+    C07["07_candidate_site_generation.py\ncandidate_sites.parquet"]
+    R08["08_site_ranking_topN.py\nrecommended_sites_topN.parquet\ncandidate_sites_scored.parquet"]
+  end
+
+  subgraph S5["Serving / UX"]
+    APP["app.py (Streamlit)\nPolicy + diagnostics dashboard"]
+    COLAB["00_colab_interactive_workflow.ipynb\nInteractive experimentation"]
+  end
+
+  AFDC --> F04B
+  ACS --> F04B
+  GAZ --> F04B
+  WX --> F04B
+
+  F04B --> EDA
+  F04B --> M06
+  F04B --> M10
+
+  M06 --> C07
+  C07 --> R08
+  M10 --> R08
+
+  M06 --> APP
+  M10 --> APP
+  R08 --> APP
+
+  F04B --> COLAB
+  M06 --> COLAB
+  M10 --> COLAB
+  R08 --> COLAB
+```
+
+### 2) Detailed Pipeline Flow
+
+```mermaid
+flowchart TD
+  A["run_pipeline.py"] --> B["04b_modeling_features.py"]
+  B --> C["06_xgboost_classifier.py"]
+  C --> D["07_candidate_site_generation.py"]
+  D --> E["08_site_ranking_topN.py"]
+  E --> F["10_installation_forecasting.py"]
+  F --> G["app.py (streamlit run)"]
+
+  B -. optional separate EDA .-> H["05_visual_eda_dashboard.ipynb.ipynb"]
+```
+
+### 3) ER / Data Schema Diagram
+
+```mermaid
+erDiagram
+  ZCTA_MODELING_FEATURES {
+    string ZIP_ZCTA PK
+    string State
+    string region
+    int is_continental_us
+    float total_population
+    float median_household_income
+    float area_km2
+    float population_density
+    int rurality_flag
+    float distance_to_nearest_interstate_miles
+    float terrain_ruggedness
+    float terrain_mean_elevation_m
+    float weather_avg_temp_c
+    float weather_avg_precip_mm_day
+    float weather_extreme_heat_days_year
+    float weather_heavy_precip_days_year
+    float nearest_dcfc_miles
+    int is_charging_desert
+    float final_lat
+    float final_lon
+  }
+
+  PREDICTIONS_ZCTA {
+    string ZIP_ZCTA PK
+    string State
+    string region
+    int is_charging_desert
+    float nearest_dcfc_miles
+    float predicted_desert_prob
+    float predicted_nearest_dcfc_miles
+    float distance_residual_miles
+    float total_population
+    float median_household_income
+    float final_lat
+    float final_lon
+  }
+
+  CANDIDATE_SITES {
+    string candidate_id PK
+    string candidate_type
+    int candidate_rank_hint
+    string parent_zcta FK
+    string State
+    string region
+    float lat
+    float lon
+    int is_charging_desert
+    float predicted_desert_prob
+    float distance_residual_miles
+    float total_population
+    float median_household_income
+  }
+
+  CANDIDATE_SITES_SCORED {
+    string candidate_id PK
+    string parent_zcta FK
+    float population_covered_25mi
+    float distance_reduction
+    float distance_reduction_per_covered_zcta
+    float mean_neighbor_dcfc_mi
+    float equity_weight
+    float avg_forecast_installations_12m
+    float market_gap_pct_region
+    float composite_score
+    int covered_zctas
+  }
+
+  RECOMMENDED_SITES_TOPN {
+    string candidate_id FK
+    string parent_zcta FK
+    int scenario_top_n
+    int selection_order
+    float composite_score
+  }
+
+  ZCTA_FORECAST_PANEL {
+    string ZIP_ZCTA FK
+    date month_start
+    string year_month
+    float new_dcfc_ports_this_month
+    float new_dcfc_ports_last_12m
+    float new_dcfc_ports_next_12m
+    int is_test_period
+    float ports_lag_1m
+    float ports_lag_3m
+    float ports_lag_6m
+    float ports_lag_12m
+    float ports_cum_to_date
+  }
+
+  ZCTA_INSTALLATION_FORECAST {
+    string ZIP_ZCTA FK
+    date month_start
+    string State
+    string region
+    float new_dcfc_ports_next_12m
+    float forecast_new_dcfc_ports_next_12m
+    string model_choice
+  }
+
+  ZCTA_INSTALLATION_FORECAST_LATEST {
+    string ZIP_ZCTA PK
+    date month_start
+    float forecast_new_dcfc_ports_next_12m
+    string model_choice
+  }
+
+  MODEL_METRICS_JSON {
+    string model_family
+    string evaluation_scope
+    float spatial_test_pr_auc_mean
+    float spatial_test_pr_auc_std
+    float precision_at_p50_mean
+    float recall_at_p50_mean
+  }
+
+  SPATIAL_EVALUATION_JSON {
+    string primary_config
+    float pr_auc_mean
+    float pr_auc_std
+    string per_seed_metrics
+  }
+
+  INSTALLATION_FORECAST_METRICS_JSON {
+    string selected_model
+    float boosted_rmse
+    float poisson_rmse
+    float persistence_rmse
+    float boosted_spearman_rho
+  }
+
+  SITE_RANKING_SENSITIVITY_JSON {
+    string weights
+    string aggregate_gap_top100_region
+    string per_zcta_gap_top100_region
+  }
+
+  ZCTA_MODELING_FEATURES ||--|| PREDICTIONS_ZCTA : "ZIP_ZCTA"
+  ZCTA_MODELING_FEATURES ||--o{ CANDIDATE_SITES : "parent_zcta"
+  CANDIDATE_SITES ||--|| CANDIDATE_SITES_SCORED : "candidate_id"
+  CANDIDATE_SITES_SCORED ||--o{ RECOMMENDED_SITES_TOPN : "candidate_id"
+  ZCTA_MODELING_FEATURES ||--o{ ZCTA_FORECAST_PANEL : "ZIP_ZCTA"
+  ZCTA_FORECAST_PANEL ||--o{ ZCTA_INSTALLATION_FORECAST : "ZIP_ZCTA + month_start"
+  ZCTA_INSTALLATION_FORECAST ||--|| ZCTA_INSTALLATION_FORECAST_LATEST : "latest per ZIP_ZCTA"
+```
+
+### 4) Sequence Diagram
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant User
+  participant Pipeline as run_pipeline.py
+  participant F04B as 04b_modeling_features.py
+  participant M06 as 06_xgboost_classifier.py
+  participant C07 as 07_candidate_site_generation.py
+  participant R08 as 08_site_ranking_topN.py
+  participant M10 as 10_installation_forecasting.py
+  participant APP as app.py (Streamlit)
+
+  User->>Pipeline: run full pipeline
+  Pipeline->>F04B: build modeling table
+  F04B-->>Pipeline: zcta_modeling_features.parquet
+  Pipeline->>M06: train/evaluate classifier+regressor
+  M06-->>Pipeline: predictions + model metrics + spatial eval
+  Pipeline->>C07: generate candidate sites
+  C07-->>Pipeline: candidate_sites.parquet
+  Pipeline->>R08: score/rank candidates
+  R08-->>Pipeline: recommended_sites_topN.parquet + sensitivity
+  Pipeline->>M10: forecast future installs
+  M10-->>Pipeline: forecast panel + forecasts + metrics
+  User->>APP: streamlit run app.py
+  APP->>APP: load processed/model artifacts
+  APP-->>User: maps, metrics, sensitivity, additionality views
+```
+
+---
+
 ## Repository Structure
 
 ```text
@@ -34,6 +287,7 @@ ev-charging-analysis/
 │   ├── 07_candidate_site_generation.py
 │   ├── 08_site_ranking_topN.py
 │   ├── 09_dashboard.py
+│   ├── 10_installation_forecasting.py
 │   └── colab_interactive_diagnostics.py
 └── reports/
 ```
