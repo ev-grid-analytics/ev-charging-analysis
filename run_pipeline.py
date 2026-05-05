@@ -4,7 +4,7 @@ Usage:
   python3 run_pipeline.py
   python3 run_pipeline.py --from-stage 06
   python3 run_pipeline.py --to-stage 10
-  python3 run_pipeline.py --skip 05
+  python3 run_pipeline.py --skip 08
   python3 run_pipeline.py --dry-run
 """
 
@@ -20,7 +20,6 @@ ROOT = Path(__file__).resolve().parent
 
 STAGES = [
     ("04b", "notebooks/04b_modeling_features.py"),
-    ("05", "notebooks/05_eda_visualizations.py"),
     ("06", "notebooks/06_xgboost_classifier.py"),
     ("07", "notebooks/07_candidate_site_generation.py"),
     ("08", "notebooks/08_site_ranking_topN.py"),

@@ -29,7 +29,7 @@ ev-charging-analysis/
 ├── notebooks/
 │   ├── 00_colab_interactive_workflow.ipynb
 │   ├── 04b_modeling_features.py
-│   ├── 05_eda_visualizations.py
+│   ├── 05_visual_eda_dashboard.ipynb.ipynb
 │   ├── 06_xgboost_classifier.py
 │   ├── 07_candidate_site_generation.py
 │   ├── 08_site_ranking_topN.py
@@ -62,16 +62,20 @@ python3 -m streamlit run app.py
 python3 run_pipeline.py
 ```
 
-Default stages run in order:
+Default script stages run in order:
 
-- `04b -> 05 -> 06 -> 07 -> 08 -> 10`
+- `04b -> 06 -> 07 -> 08 -> 10`
+
+EDA/dashboard notebook is run separately:
+
+- `notebooks/05_visual_eda_dashboard.ipynb.ipynb`
 
 Useful options:
 
 ```bash
 python3 run_pipeline.py --dry-run
 python3 run_pipeline.py --from-stage 06 --to-stage 08
-python3 run_pipeline.py --skip 05
+python3 run_pipeline.py --skip 08
 ```
 
 ---
@@ -101,7 +105,7 @@ Scope handling:
 
 ## Stage B: EDA Visualization Layer
 
-### `05_eda_visualizations.py` and companion visualization workflows
+### `05_visual_eda_dashboard.ipynb.ipynb` (EDA/dashboard notebook)
 
 Generates descriptive visual outputs for:
 
@@ -219,12 +223,18 @@ Writes:
 
 - `data/processed/zcta_forecast_panel.parquet`
 - `data/processed/zcta_installation_forecast.parquet`
+- `data/processed/zcta_installation_forecast_latest.parquet`
 - `data/models/installation_forecast_metrics.json`
 
 Current run snapshot:
 
 - Poisson RMSE: 2.486
 - Boosted RMSE: 1.208
+- Constant-zero RMSE baseline: 2.495
+- Persistence (last-12m) RMSE baseline: 1.258
+- Boosted MAE: 0.215
+- Boosted Spearman ρ: 0.421
+- Target prevalence (>=1 port in next 12m): 6.96%
 - Selected model: boosted
 
 ---
